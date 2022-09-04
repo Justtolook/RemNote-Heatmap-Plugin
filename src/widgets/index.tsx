@@ -3,6 +3,15 @@ import '../style.css';
 import '../App.css';
 
 async function onActivate(plugin: ReactRNPlugin) {
+  //Register text dictionary widget
+  await plugin.app.registerWidget(
+    'heatmap',
+    WidgetLocation.Pane,
+    {
+      dimensions: { height: 'auto', width: 'auto'},
+    },
+  );
+  await plugin.window.openWidgetInPane('heatmap');
   // Register settings
   await plugin.settings.registerStringSetting({
     id: 'name',

@@ -6,12 +6,20 @@
   "scripts": {
     "check-types": "tsc",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --color --progress --no-open",
-    "build": "rm -rf dist && cross-env NODE_ENV=production webpack --color --progress && cd dist && zip -r ../PluginZip.zip ./*"
+    "validate": "ts-node --project ./tsconfig.json ./scripts/validate.ts",
+    "build": "npm run validate && rm -rf dist && cross-env NODE_ENV=production webpack --color --progress && cp README.md dist && cd dist && zip -r ../PluginZip.zip ./*"
   },
   "dependencies": {
-    "@remnote/plugin-sdk": "^0.0.5",
+    "@remnote/plugin-sdk": "^0.0.9",
+    "apexcharts": "^3.35.5",
+    "chart.js": "^3.9.1",
+    "chartjs-chart-matrix": "^1.1.1",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-apexcharts": "^1.4.0",
+    "react-chartjs-2": "^4.3.1",
+    "react-dom": "^17.0.2",
+    "react-grid-heatmap": "^1.2.0",
+    "react-heatmap-grid": "^0.9.0"
   },
   "devDependencies": {
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
@@ -31,6 +39,7 @@
     "postcss-loader": "^7.0.0",
     "react-refresh": "^0.14.0",
     "tailwindcss": "^3.1.5",
+    "ts-node": "^10.9.1",
     "typescript": "^4.7.4",
     "webpack": "^5.73.0",
     "webpack-cli": "^4.10.0",
