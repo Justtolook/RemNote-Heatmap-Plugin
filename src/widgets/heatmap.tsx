@@ -60,6 +60,13 @@ function Heatmap () {
       dataLabels: {
         enabled: false
       },
+      legend: {
+        show: true,
+        customLegendItems: ['Zero', 'Low', 'Normal'],
+        markers: {
+          fillColors: ['#FFF', heatmapColorLow, heatmapColorNormal]
+        }
+      },
       colors: [heatmapColorNormal],
       plotOptions: {
         heatmap: {
@@ -126,39 +133,36 @@ function Heatmap () {
 }
 
 function getRepetitionsPerDayObject () {
-  const plugin = usePlugin();
 
-  var allCards: Card[] | undefined = useTracker(
+  const allCards: Card[] | undefined = useTracker(
     async (reactivePlugin) => await reactivePlugin.card.getAll()
   );
 
-  var repetitionHistory = allCards?.map((card) => card.repetitionHistory);
+  const repetitionHistory = allCards?.map((card) => card.repetitionHistory);
 
   var repetitionHistoryDates = repetitionHistory?.map((repetition) => repetition?.map((repetition) => repetition.date));
 
   //flatten the repetitionHistoryDates array
-
-  var repetitionHistoryDatesFlat = repetitionHistoryDates?.flat();
+  repetitionHistoryDates = repetitionHistoryDates?.flat();
 
   //sort dates in ascending order
-  var repetitionHistoryDatesFlatSorted = repetitionHistoryDatesFlat?.sort((a,b ) => a -b);;
+  repetitionHistoryDates = repetitionHistoryDates?.sort((a,b ) => a -b);;
 
   //convert repetitionHistoryDatesFlatSorted into an array of dates
-  var repetitionHistoryDatesFlatSortedDates = repetitionHistoryDatesFlatSorted?.map((date) => new Date(date));
+  repetitionHistoryDates = repetitionHistoryDates?.map((date) => new Date(date));
 
   //remove all NaN values from repetitionHistoryDatesFlatSortedDates
-  var repetitionHistoryDatesFlatSortedDatesFiltered = repetitionHistoryDatesFlatSortedDates?.filter((date) => !isNaN(date.getTime()));
+  repetitionHistoryDates = repetitionHistoryDates?.filter((date) => !isNaN(date.getTime()));
 
-  //
 
   //group dates by day and count the number of repetitions per day
-  var repetitionHistoryDatesFlatSortedDatesGroupedByDay = repetitionHistoryDatesFlatSortedDatesFiltered?.reduce((r, a) => {
+  const repetitionHistoryDatesFlatSortedDatesGroupedByDay = repetitionHistoryDates?.reduce((r, a) => {
     r[a.toDateString()] = ++r[a.toDateString()] || 1;
     return r;
   }, Object.create(Object));
 
   //convert repetitionHistoryDatesFlatSortedDatesGroupedByDay's keys into Unix timestamps and store them in an object
-  var repetitionHistoryDatesFlatSortedDatesGroupedByDayUnix = Object.keys(repetitionHistoryDatesFlatSortedDatesGroupedByDay ||{}).map((key) => {
+  const repetitionHistoryDatesFlatSortedDatesGroupedByDayUnix = Object.keys(repetitionHistoryDatesFlatSortedDatesGroupedByDay ||{}).map((key) => {
     return {
       date: new Date(key).getTime(),
       repetitions: repetitionHistoryDatesFlatSortedDatesGroupedByDay[key]
