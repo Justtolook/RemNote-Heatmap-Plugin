@@ -11,41 +11,31 @@ async function onActivate(plugin: ReactRNPlugin) {
       dimensions: { height: 'auto', width: 'auto'},
     },
   );
-  await plugin.window.openWidgetInPane('heatmap');
+  //await plugin.window.openWidgetInPane('heatmap');
   // Register settings
   await plugin.settings.registerStringSetting({
-    id: 'name',
-    title: 'What is your Name?',
-    defaultValue: 'Bob',
+    id: 'HeatmapColorLow',
+    title: 'Color for low values',
+    defaultValue: '#b3dff0',
   });
-
-  await plugin.settings.registerBooleanSetting({
-    id: 'pizza',
-    title: 'Do you like pizza?',
-    defaultValue: true,
+  await plugin.settings.registerStringSetting({
+    id: 'HeatmapColorNormal',
+    title: 'Color for normal values',
+    defaultValue: '#3362f0',
   });
-
   await plugin.settings.registerNumberSetting({
-    id: 'favorite-number',
-    title: 'What is your favorite number?',
-    defaultValue: 42,
+    id: 'HeatmapLowUpperBound',
+    title: 'Upper bound for low number of repetitions',
+    defaultValue: 30,
   });
 
   // A command that inserts text into the editor if focused.
   await plugin.app.registerCommand({
-    id: 'editor-command',
-    name: 'Editor Command',
+    id: 'open-heatmap',
+    name: 'Open Heatmap',
     action: async () => {
-      plugin.editor.insertPlainText('Hello World!');
+      plugin.window.openWidgetInPane('heatmap');
     },
-  });
-
-  // Show a toast notification to the user.
-  await plugin.app.toast("I'm a toast!");
-
-  // Register a sidebar widget.
-  await plugin.app.registerWidget('sample_widget', WidgetLocation.RightSidebar, {
-    dimensions: { height: 'auto', width: '100%' },
   });
 }
 

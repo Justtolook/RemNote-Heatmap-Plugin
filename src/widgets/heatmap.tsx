@@ -1,10 +1,24 @@
 import { usePlugin, renderWidget, useTracker, Card, CardNamespace, Rem, useRunAsync } from '@remnote/plugin-sdk';
 import Chart from 'react-apexcharts';
 
-
+const DEFAULT_heatmapColorLow = '#b3dff0';
+const DEFAULT_heatmapColorNormal = '#3362f0';
 
 function Heatmap () {
+  const plugin = usePlugin();
+  var heatmapColorLow = useTracker(() => plugin.settings.getSetting('HeatmapColorLow'));
+  var heatmapColorNormal = useTracker(() => plugin.settings.getSetting('HeatmapColorNormal'));
+  const heatmapLowUpperBound = useTracker(() => plugin.settings.getSetting('HeatmapLowUpperBound'));
   var data = getFullArrayRepetitionsPerDay();
+
+//check if heatmapColorLow and heatmapColorNormal are valid colors, if not set them to default values
+  if (!/^#[0-9A-F]{6}$/i.test(heatmapColorLow)) {
+    heatmapColorLow = DEFAULT_heatmapColorLow;
+  }
+  if (!/^#[0-9A-F]{6}$/i.test(heatmapColorNormal)) {
+    heatmapColorNormal = DEFAULT_heatmapColorNormal;
+  }
+
 
   //create an object where the keys are Monday to Sunday
   //this will be used for the series in the heatmap
@@ -46,16 +60,16 @@ function Heatmap () {
       dataLabels: {
         enabled: false
       },
-      colors: ['#3362f0'],
+      colors: [heatmapColorNormal],
       plotOptions: {
         heatmap: {
           shadeIntensity: 0.8,
           colorScale: {
             ranges: [{
               from: 1,
-              to: 30,
-              name: '< 30',
-              color: '#b3dff0'
+              to: heatmapLowUpperBound,
+              name: '< ' + heatmapLowUpperBound,
+              color: heatmapColorLow
             },
             {
               from: 0,
