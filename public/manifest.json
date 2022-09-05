@@ -1,20 +1,21 @@
 {
   "manifestVersion": 1,
-  "id": "plugin_template",
-  "name": "Plugin Template",
-  "author": "remnote",
-  "repoUrl": "",
+  "id": "heatmap",
+  "name": "Heatmap",
+  "author": "henrik",
+  "repoUrl": "https://github.com/Justtolook/RemNote-Heatmap-Plugin",
   "version": {
-    "major": 0,
+    "major": 1,
     "minor": 0,
-    "patch": 1
+    "patch": 0
   },
-  "description": "",
+  "description": "Displays a heatmap of the number of repetitions per day. Open with slash-command: heatmap.",
   "requestNative": false,
+  "enableOnMobile": false,
   "requiredScopes": [
     {
       "type": "All",
-      "level": "ReadCreateModify"
+      "level": "Read"
     }
   ]
 }
