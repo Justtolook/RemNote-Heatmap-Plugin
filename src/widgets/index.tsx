@@ -3,7 +3,7 @@ import '../style.css';
 import '../App.css';
 
 async function onActivate(plugin: ReactRNPlugin) {
-  //Register text dictionary widget
+  //Register heatmap widget
   await plugin.app.registerWidget(
     'heatmap',
     WidgetLocation.Pane,
@@ -29,7 +29,7 @@ async function onActivate(plugin: ReactRNPlugin) {
     defaultValue: 30,
   });
 
-  // A command that inserts text into the editor if focused.
+  // A command that opens the heatmap widget in a new pane 
   await plugin.app.registerCommand({
     id: 'open-heatmap',
     name: 'Open Heatmap',
