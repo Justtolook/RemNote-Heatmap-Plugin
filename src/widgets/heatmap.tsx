@@ -57,6 +57,11 @@ function Heatmap () {
       xaxis: {
         type: 'datetime'
       },
+      chart: {
+        toolbar: {
+          show: false
+        }
+      },
       dataLabels: {
         enabled: false
       },
