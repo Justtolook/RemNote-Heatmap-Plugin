@@ -9,7 +9,15 @@ function Heatmap () {
   var heatmapColorLow = useTracker(() => plugin.settings.getSetting('HeatmapColorLow'));
   var heatmapColorNormal = useTracker(() => plugin.settings.getSetting('HeatmapColorNormal'));
   const heatmapLowUpperBound = useTracker(() => plugin.settings.getSetting('HeatmapLowUpperBound'));
-  var data = getFullArrayRepetitionsPerDay();
+  const allCards: Card[] | undefined = useTracker(
+    async (reactivePlugin) => await reactivePlugin.card.getAll()
+  );
+
+  const repetitionsPerDay = getRepetitionsPerDayObject(allCards);
+  const daysLearned = repetitionsPerDay.length;
+  var data = getFullArrayRepetitionsPerDay(allCards);
+  var dailyAverage = getDailyAverage(data);
+  var longestStreak = getLongestStreak(data);
 
 //check if heatmapColorLow and heatmapColorNormal are valid colors, if not set them to default values
   if (!/^#[0-9A-F]{6}$/i.test(heatmapColorLow)) {
@@ -134,14 +142,56 @@ function Heatmap () {
       width="800"
       height="200"
     />
+    <div>
+      <div>Days Learned: {daysLearned}</div>
+      <div>Longest Streak: {longestStreak}</div>
+      <div>Daily average: {dailyAverage}</div>
+    </div>
   </div>;
 }
 
-function getRepetitionsPerDayObject () {
+/**
+ * 
+ * @param data (FullArrayRepetitionsPerDay)
+ * @returns number (longest streak in days)
+ */
+function getLongestStreak(data) {
+  var streak = 0;
+  var longestStreak = 0;
+  for (var i = 0; i < data.length; i++) {
+    if (data[i][1] > 0) {
+      streak++;
+    } else {
+      if (streak > longestStreak) {
+        longestStreak = streak;
+      }
+      streak = 0;
+    }
+  }
+  return longestStreak;
+  
+}
 
-  const allCards: Card[] | undefined = useTracker(
-    async (reactivePlugin) => await reactivePlugin.card.getAll()
-  );
+/**
+ * 
+ * @param data (FullArrayRepetitionsPerDay)
+ * @returns number (daily average)
+ */
+function getDailyAverage(data) {
+  var sum = 0;
+  for (var i = 0; i < data.length; i++) {
+    sum += data[i][1];
+  }
+  return Math.round(sum / data.length);
+}
+
+/**
+ * 
+ * @param allCards 
+ * @returns an object with the number of repetitions per day
+ */
+function getRepetitionsPerDayObject (allCards) {
+  
 
   const repetitionHistory = allCards?.map((card) => card.repetitionHistory);
 
@@ -183,8 +233,8 @@ function getRepetitionsPerDayObject () {
  * @returns Array[][]
  * Format: [UnixTimespamp,nRepetitions] 
  */
-function getFullArrayRepetitionsPerDay() {
-  var data = getRepetitionsPerDayObject();
+function getFullArrayRepetitionsPerDay(allCards) {
+  var data = getRepetitionsPerDayObject(allCards);
 
   
   //sort data by date in ascending order
