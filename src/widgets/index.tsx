@@ -5,7 +5,7 @@ import '../App.css';
 async function onActivate(plugin: ReactRNPlugin) {
   //Register heatmap widget
   await plugin.app.registerWidget(
-    'heatmap',
+    'heatmapv2',
     WidgetLocation.Pane,
     {
       dimensions: { height: 'auto', width: 'auto'},
@@ -34,7 +34,7 @@ async function onActivate(plugin: ReactRNPlugin) {
     id: 'open-heatmap',
     name: 'Open Heatmap',
     action: async () => {
-      plugin.window.openWidgetInPane('heatmap');
+      plugin.window.openWidgetInPane('heatmapv2');
     },
   });
 }
